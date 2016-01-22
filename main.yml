@@ -2,39 +2,63 @@
   hosts: 127.0.0.1
 
   vars_prompt:
+    - name: "providers"
+      prompt: "providers? (virtualbox,docker,aws)"
+      default:
+      private: no
+    - name: "debug"
+      prompt: "debug? (true or false)"
+      default: no
+      private: no
     - name: "os"
       prompt: "os? (ol7 or centos7)"
       default: "centos7"
+      private: no
     - name: "quick"
       prompt: "quick installer? (true or false)"
-      default: true
+      default: "true"
+      private: no
     - name: "infra"
       prompt: "install infra? (true or false)"
-      default: false
-      when: not quick
+      default: "false"
+      private: no
 
   tasks:
-
-    - shell: "ansible-galaxy install -f -p ./roles -r roles.yml"
+    - set_fact:
+        only_providers: -only={{ providers }}
+      when: providers is defined and providers != ""
 
     - set_fact:
-        variables: oracle-weblogic-qs-12c-ol7.json
+        debug_text: "-debug=true"
+      when: debug | bool
+
+    - set_fact:
+        debug_text: "-debug=false"
+      when: not debug | bool
+
+    - set_fact:
+        variables: oracle-weblogic-qs-12c-{{ os }}.json
         installers:
           - "{{ ansible_env.HOME }}/oracle/fmw/installers/12.2.1/fmw_12.2.1.0.0_wls_quick_Disk1_1of1.zip"
-      when: quick
+      when: quick | bool
 
     - set_fact:
-        variables: oracle-weblogic-12c-ol7.json
+        variables: oracle-weblogic-12c-{{ os }}.json
         installers:
           - "{{ ansible_env.HOME }}/oracle/fmw/installers/12.2.1/fmw_12.2.1.0.0_wls_Disk1_1of1.zip"
-      when: not quick and not infra
+      when: not quick | bool and not infra  | bool
 
     - set_fact:
-        variables: oracle-weblogic-infra-12c-ol7.json
+        variables: oracle-weblogic-infra-12c-{{ os }}.json
         installers:
           - "{{ ansible_env.HOME }}/oracle/fmw/installers/12.2.1/fmw_12.2.1.0.0_wls_Disk1_1of1.zip"
           - "{{ ansible_env.HOME }}/oracle/fmw/installers/12.2.1/fmw_12.2.1.0.0_infrastructure_Disk1_1of1.zip"
-      when: not quick and infra
+      when: not quick | bool and infra | bool
+
+    - debug:
+        msg: "{{ variables }} template will be built"
+
+    - shell: "ansible-galaxy install -f -p ./roles -r roles.yml"
 
     - copy:
         src: "{{ item }}"
@@ -42,4 +66,4 @@
         force: no
       with_items: "{{ installers }}"
 
-    - shell: "packer build -var-file={{ variables }} -force=true oracle-weblogic.json > build.log"
+    - shell: "packer build -var-file={{ variables }} -force=true {{ debug_text }} {{ only_providers }} oracle-weblogic.json >> build.log"

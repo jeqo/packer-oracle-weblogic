@@ -39,6 +39,11 @@
     "ssh_port": 22,
     "ssh_wait_timeout": "10000s",
 
+    "vboxmanage": [
+      ["modifyvm", "{{.Name}}", "--memory", "1024"],
+      ["modifyvm", "{{.Name}}", "--cpus", "1"]
+    ],
+
     "headless": false,
     "boot_wait": "12s",
 
