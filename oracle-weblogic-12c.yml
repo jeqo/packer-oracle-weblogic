@@ -1,0 +1,11 @@
+---
+- name: oracle weblogic 12c (12.2.1)
+  hosts: 127.0.0.1
+
+  roles:
+    - role: oracle-weblogic
+      oracle_weblogic_version: 12c
+      oracle_weblogic_release: 12.2.1
+      oracle_weblogic_quick_installation: no
+      oracle_weblogic_install_infra: no
+      oracle_wls_installers_12_2_1_1of1: roles/oracle-weblogic/files/fmw_12.2.1.0.0_wls_Disk1_1of1.zip
