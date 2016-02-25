@@ -1,3 +1,2 @@
-packer_cache
-
-roles/
+packer_cache/
+build/

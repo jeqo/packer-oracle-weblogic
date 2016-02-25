@@ -1,0 +1,20 @@
+{
+  "image_name": "oracle-weblogic-11g-centos7",
+
+  "virtualbox_output_directory": "build",
+  "virtualbox_source_path": "/home/jeqo/.vagrant.d/boxes/jeqo-VAGRANTSLASH-oracle-jdk-7-centos7/0/virtualbox/box.ovf",
+
+  "docker_source_image": "jeqo/oracle-jdk-7-centos7",
+
+  "aws_source_ami": "",
+
+  "ansible_playbook_file": "oracle-weblogic-11g.yml",
+
+  "docker_user": "syscomiddleware",
+
+  "vagrant_box_output": "build/vagrant.box",
+
+  "atlas_user": "syscomiddleware",
+
+  "version": "10.3.6"
+}

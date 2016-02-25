@@ -1,0 +1,9 @@
+---
+- name: oracle weblogic 11g (10.3.6)
+  hosts: 127.0.0.1
+  roles:
+    - role: oracle-weblogic
+      oracle_weblogic_version: 11g
+      oracle_weblogic_release: 10.3.6
+      oracle_weblogic_quick_installation: no
+      oracle_weblogic_jar: /tmp/packer-provisioner-ansible-local/roles/oracle-weblogic/files/wls1036_generic.jar
